@@ -6,10 +6,12 @@ public class Conta {
     private boolean status;
     private float saldo;
     
+    
+    //Some methods
     public void abrirConta(String t) {
         if ((t == "cc") || (t == "cp")) {
             this.setTipo(t);
-            this.setStatus("Aberta");
+            this.setStatus(true);
             if (t == "cp") {
                 this.saldo = 150;
             } else if (t == "cc"){
@@ -26,36 +28,57 @@ public class Conta {
         } else if (this.getSaldo() < 0) {
             System.out.println("Conta em débito");
         } else {
-            this.setStatus("Fechado");
+            this.setStatus(false);
         }
     }
     
     public void depositar(float d) {
-        this.setSaldo(this.getSaldo() + d);
+        if (this.isStatus()) {
+            this.setSaldo(this.getSaldo() + d);    
+        } else {
+            System.out.println("Conta Não está aberta.");
+        }
+        
     }
     
     public void sacar(float s) {
-        if (s > this.getSaldo()) {
-            System.out.println("Transação de Saque INVÁLIDA");
-        } else {
-            this.setSaldo(this.getSaldo() - s);
+        if (this.isStatus()) {
+            if (s > this.getSaldo()) {
+                System.out.println("Transação de Saque INVÁLIDA");
+            } else {
+                this.setSaldo(this.getSaldo() - s);
+            }   
         }
     }
     
     public void pagarMensal() {
+        float a = 0;
         if (this.getTipo() == "cp") {
-            this.setSaldo(this.getSaldo() - 20);
+            a = -12;
         } else {
-            this.setSaldo(this.getSaldo() - 12);
+            a = -20;
         }
+        if (this.isStatus()) {
+            if (this.getSaldo() > a) {
+                this.setSaldo(this.getSaldo() - a);
+            } else {
+                System.out.println("Saldo insuficiente");
+            }
+        } else {
+            
+        }
+        
     }
 
+    
+    //Contructor
     public Conta(int numConta, String dono) {
         this.saldo = 0;
-        this.status = "Fechado";
+        this.status = false;
     }
 
-
+    
+    //Getters and Setters
     public int getNumConta() {
         return numConta;
     }
@@ -70,7 +93,7 @@ public class Conta {
 
     public void setTipo(String tipo) {
         this.tipo = tipo; 
-    }
+    } 
 
     public String getDono() {
         return dono;
@@ -80,11 +103,11 @@ public class Conta {
         this.dono = dono;
     }
 
-    public String getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
@@ -95,6 +118,4 @@ public class Conta {
     public void setSaldo(float saldo) {
         this.saldo = saldo;
     }
-    
-    
 }
